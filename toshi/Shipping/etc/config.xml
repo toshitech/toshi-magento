@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+	<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+		<default>
+			<carriers>
+				<toshi>
+					<active>1</active>
+					<price>0</price>
+					<model>Toshi\Shipping\Model\Carrier\Shipping</model>
+					<name>Free</name>
+					<title>Toshi Concierge Delivery</title>
+					<specificerrmsg>This shipping method is not available. To use this shipping method, please contact us.</specificerrmsg>
+					<sort_order>-1</sort_order>
+					<sallowspecific>1</sallowspecific>
+            		<specificcountry>GB</specificcountry>
+					<toshi_min_basket_amount>350</toshi_min_basket_amount>
+				</toshi>
+			</carriers>
+		</default>
+	</config>
