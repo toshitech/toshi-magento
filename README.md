@@ -19,7 +19,7 @@ php bin/magento cache:clean
 5. Expand the "Sales" section and click "Shipping Methods"
 6. Expand the "Toshi Concierge Delivery" shipping option and enable it (if necessary)
 7. Update the "Minimum Basket Amount" value (if necessary)
-8. Set the "Toshi Endpoint URL" to "https://www.toshi.co"
+8. Set the "Toshi Endpoint URL" to "https://www.toshi.co" for production. For staging "https://www.staging.toshi.co".
 9. Set the "Toshi Client API Key" to the key provided to you
 10. Set the "Toshi Server API Key" to the key provided to you
 Click "Save Config"
