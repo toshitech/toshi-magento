@@ -9,8 +9,10 @@ function launchToshi() {
   // Prevent user to go to payment step if Toshi is selected and no time slot selected
   jQuery(":submit.continue").click(function (event){
     if (jQuery("[value=toshi_toshi]").is(":checked") && !timeSlotSelected){
-      event.preventDefault();
       showErrorMessage();
+      return false;
+    } else {
+      hideErrorMessage();
     }
   });
 
@@ -21,9 +23,9 @@ function launchToshi() {
       }
   });
 
-  jQuery('#label_carrier_toshi_toshi').append('<div id="toshi-app"></div>');
+  jQuery('#label_carrier_toshi_toshi').closest('li').append('<div id="toshi-app"></div>');
 
-  modal.mount(document.getElementById('toshi-app'));
+  modal.mountModalSeparately(document.getElementById('toshi-app'), document.body);
   toshiLaunched = true;
   console.log('TOSHI Carrier Service added to DOM');
     
@@ -158,7 +160,7 @@ function getCustomerEmail() {
   if (isCustomerLoggedIn) {
     return customerData.email;
   } else {
-    return jQuery('#customer-email').val();
+    return jQuery('#checkoutPageUserEmail').val();
   }
 }
 
@@ -175,8 +177,8 @@ var obs = new MutationObserver(function(mutations, observer) {
   }
 
   if (getContainerElement() && typeof modal != 'undefined' && jQuery('#toshi-app').length === 0){
-    jQuery('#label_carrier_toshi_toshi').append('<div id="toshi-app"></div>');
-    modal.mount(document.getElementById('toshi-app'));
+    jQuery('#label_carrier_toshi_toshi').closest('li').append('<div id="toshi-app"></div>');
+    modal.mountModalSeparately(document.getElementById('toshi-app'), document.body);
   }
 });
 
