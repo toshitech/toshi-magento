@@ -9,10 +9,8 @@ function launchToshi() {
   // Prevent user to go to payment step if Toshi is selected and no time slot selected
   jQuery(":submit.continue").click(function (event){
     if (jQuery("[value=toshi_toshi]").is(":checked") && !timeSlotSelected){
+      event.preventDefault();
       showErrorMessage();
-      return false;
-    } else {
-      hideErrorMessage();
     }
   });
 
