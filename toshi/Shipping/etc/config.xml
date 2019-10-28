@@ -10,8 +10,6 @@
 					<title>Toshi Concierge Delivery</title>
 					<specificerrmsg>This shipping method is not available. To use this shipping method, please contact us.</specificerrmsg>
 					<sort_order>-1</sort_order>
-					<sallowspecific>1</sallowspecific>
-            		<specificcountry>GB</specificcountry>
 					<toshi_min_basket_amount>350</toshi_min_basket_amount>
 				</toshi>
 			</carriers>
