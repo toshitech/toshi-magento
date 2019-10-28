@@ -23,12 +23,12 @@ function launchToshi() {
       }
   });
 
-  jQuery('#label_carrier_toshi_toshi').closest('li').append('<div id="toshi-app"></div>');
+  jQuery('#label_carrier_toshi_toshi').append('<div id="toshi-app"></div>');
 
-  modal.mountModalSeparately(document.getElementById('toshi-app'), document.body);
+  modal.mount(document.getElementById('toshi-app'));
   toshiLaunched = true;
   console.log('TOSHI Carrier Service added to DOM');
-    
+
   // This is fired by the ecommerce integration when the customer attempts to
   // proceed without selecting a timeslot.
   window.showErrorMessage = () => {
@@ -46,17 +46,17 @@ function launchToshi() {
   });
 
   modal.setBrandCheckoutReference(checkoutConfig.quoteItemData[0].quote_id);
-  
+
   modal.setOrderTotal({
     orderTotal: checkoutConfig.totalsData.base_row_total_incl_tax
   });
 
   setTimeout(() => {
-    
+
     // Logged in customer with existing address
     if (isCustomerLoggedIn && customerData.addresses.length > 0) {
       var addressIndex = jQuery(".shipping-address-items").children(".selected-item").index();
-      
+
       modal.setFirstName(customerData.addresses[addressIndex].firstname);
       modal.setLastName(customerData.addresses[addressIndex].lastname);
       modal.setEmail(getCustomerEmail());
@@ -82,22 +82,22 @@ function launchToshi() {
       jQuery(document).on('change', 'input[name=firstname]', function() {
         modal.setFirstName(jQuery('input[name=firstname]').val());
       });
-    
+
       jQuery(document).off('change', 'input[name=lasttname]');
       jQuery(document).on('change', 'input[name=lastname]', function() {
         modal.setLastName(jQuery('input[name=lastname]').val());
       });
-    
+
       jQuery(document).off('change', '#customer-email');
       jQuery(document).on('change', '#customer-email', function() {
         modal.setEmail(jQuery('#customer-email').val());
       });
-    
+
       jQuery(document).off('change', 'input[name=telephone]');
       jQuery(document).on('change', 'input[name=telephone]', function() {
         modal.setPhone(jQuery('input[name=telephone]').val());
       });
-    
+
       jQuery(document).off('change', addressFields);
       jQuery(document).on('change', addressFields, function() {
         setAddress();
@@ -116,7 +116,7 @@ function launchToshi() {
       country: jQuery('input[name=country_id]').val()
     });
   }
-    
+
   const createProduct = (name, sku, qty, imageUrl, retailPrice, availabilityType, availabilityDate, size, colour, availableSizes) => {
     return {
       // Mandatory properties
@@ -139,15 +139,15 @@ function launchToshi() {
   let products = [];
   checkoutConfig.quoteItemData.forEach(function (item, index) {
     availableSizes = checkoutConfig.toshiData.products[index].additionalSizes
-    products.push(createProduct(item.name, 
-                                item.sku, 
-                                item.qty, 
-                                item.thumbnail, 
-                                item.base_price_incl_tax, 
+    products.push(createProduct(item.name,
+                                item.sku,
+                                item.qty,
+                                item.thumbnail,
+                                item.base_price_incl_tax,
                                 item.availability_type,
                                 item.availability_date,
-                                getAttribute(item, "Size"), 
-                                getAttribute(item, "Color"), 
+                                getAttribute(item, "Size"),
+                                getAttribute(item, "Color"),
                                 availableSizes));
   });
 
@@ -171,7 +171,7 @@ function getCustomerEmail() {
   if (isCustomerLoggedIn) {
     return customerData.email;
   } else {
-    return jQuery('#checkoutPageUserEmail').val();
+    return jQuery('#customer-email').val();
   }
 }
 
@@ -188,8 +188,8 @@ var obs = new MutationObserver(function(mutations, observer) {
   }
 
   if (getContainerElement() && typeof modal != 'undefined' && jQuery('#toshi-app').length === 0){
-    jQuery('#label_carrier_toshi_toshi').closest('li').append('<div id="toshi-app"></div>');
-    modal.mountModalSeparately(document.getElementById('toshi-app'), document.body);
+    jQuery('#label_carrier_toshi_toshi').append('<div id="toshi-app"></div>');
+    modal.mount(document.getElementById('toshi-app'));
   }
 });
 
