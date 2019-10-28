@@ -143,7 +143,7 @@ function launchToshi() {
                                 item.thumbnail,
                                 item.base_price_incl_tax,
                                 item.availability_type,
-                                item.availability_date,
+                                new Date(item.availability_date),
                                 getAttribute(item, "Size"),
                                 getAttribute(item, "Color"),
                                 availableSizes));
