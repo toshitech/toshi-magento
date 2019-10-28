@@ -60,7 +60,7 @@ class Shipping extends AbstractCarrier implements CarrierInterface
     }
 
     // Does the basket value meet the minimum requirement
-    if ($request->getPackageValue() < intval($toshiMinBasketAmount)) {
+    if ($request->getPackageValueWithDiscount() < intval($toshiMinBasketAmount)) {
         return false;
     }
 
