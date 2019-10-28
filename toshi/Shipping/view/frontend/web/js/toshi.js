@@ -9,8 +9,10 @@ function launchToshi() {
   // Prevent user to go to payment step if Toshi is selected and no time slot selected
   jQuery(":submit.continue").click(function (event){
     if (jQuery("[value=toshi_toshi]").is(":checked") && !timeSlotSelected){
-      event.preventDefault();
       showErrorMessage();
+      return false;
+    } else {
+      hideErrorMessage();
     }
   });
 
@@ -21,9 +23,9 @@ function launchToshi() {
       }
   });
 
-  jQuery('#label_carrier_toshi_toshi').append('<div id="toshi-app"></div>');
+  jQuery('#label_carrier_toshi_toshi').closest('li').append('<div id="toshi-app"></div>');
 
-  modal.mount(document.getElementById('toshi-app'));
+  modal.mountModalSeparately(document.getElementById('toshi-app'), document.body);
   toshiLaunched = true;
   console.log('TOSHI Carrier Service added to DOM');
     
@@ -115,7 +117,7 @@ function launchToshi() {
     });
   }
     
-  const createProduct = (name, sku, qty, imageUrl, retailPrice, size, colour, availableSizes) => {
+  const createProduct = (name, sku, qty, imageUrl, retailPrice, availabilityType, availabilityDate, size, colour, availableSizes) => {
     return {
       // Mandatory properties
       name: name,
@@ -128,14 +130,25 @@ function launchToshi() {
 
       // Optional properties
       colour: colour,
-      availableSizes: availableSizes
+      availableSizes: availableSizes,
+      availabilityType: availabilityType,
+      availabilityDate: availabilityDate
     };
   };
 
   let products = [];
   checkoutConfig.quoteItemData.forEach(function (item, index) {
     availableSizes = checkoutConfig.toshiData.products[index].additionalSizes
-    products.push(createProduct(item.name, item.sku, item.qty, item.thumbnail, item.base_price_incl_tax, getAttribute(item, "Size"), getAttribute(item, "Color"), availableSizes));
+    products.push(createProduct(item.name, 
+                                item.sku, 
+                                item.qty, 
+                                item.thumbnail, 
+                                item.base_price_incl_tax, 
+                                item.availability_type,
+                                item.availability_date,
+                                getAttribute(item, "Size"), 
+                                getAttribute(item, "Color"), 
+                                availableSizes));
   });
 
   modal.setProducts(products);
@@ -158,7 +171,7 @@ function getCustomerEmail() {
   if (isCustomerLoggedIn) {
     return customerData.email;
   } else {
-    return jQuery('#customer-email').val();
+    return jQuery('#checkoutPageUserEmail').val();
   }
 }
 
@@ -175,8 +188,8 @@ var obs = new MutationObserver(function(mutations, observer) {
   }
 
   if (getContainerElement() && typeof modal != 'undefined' && jQuery('#toshi-app').length === 0){
-    jQuery('#label_carrier_toshi_toshi').append('<div id="toshi-app"></div>');
-    modal.mount(document.getElementById('toshi-app'));
+    jQuery('#label_carrier_toshi_toshi').closest('li').append('<div id="toshi-app"></div>');
+    modal.mountModalSeparately(document.getElementById('toshi-app'), document.body);
   }
 });
 

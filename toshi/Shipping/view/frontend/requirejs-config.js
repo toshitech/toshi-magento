@@ -2,7 +2,7 @@ var config = {
     map: {
         '*': {
             toshiShipping: 'Toshi_Shipping/js/toshi',
-            toshiLibrary: 'https://integration-cdn.toshi.co/3.0/main.min.js'
+            toshiLibrary: 'https://integration-sandbox-cdn.toshi.co/3.0/main.min.js'
         }
     },
     deps: [
