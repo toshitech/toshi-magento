@@ -53,23 +53,9 @@ function launchToshi() {
 
     // Logged in customer with existing address
     if (isCustomerLoggedIn && customerData.addresses.length > 0) {
-      var addressIndex = jQuery(".shipping-address-items").children(".selected-item").index();
-
-      modal.setFirstName(customerData.addresses[addressIndex].firstname);
-      modal.setLastName(customerData.addresses[addressIndex].lastname);
-      modal.setEmail(getCustomerEmail());
-      modal.setPhone(customerData.addresses[addressIndex].telephone);
-      modal.setAddress({
-        addressLine1: customerData.addresses[addressIndex].street[0],
-        addressLine2: customerData.addresses[addressIndex].street[1],
-        town: customerData.addresses[addressIndex].city,
-        province: customerData.addresses[addressIndex].region.region,
-        postcode: customerData.addresses[addressIndex].postcode,
-        country: customerData.addresses[addressIndex].country_id
-      });
-
+      setDetailsFromCustomerData();
     } else { // Logged in customer with no existing address or guest customer
-      addressFields = ['input[name=street\\[0\\]]', 'input[name=street\\[1\\]]', 'input[name=city]', 'input[name=region]', 'input[name=postcode]'];
+      addressFields = ['input[name=street\\[0\\]]', 'input[name=street\\[1\\]]', 'input[name=city]', 'input[name=region]', 'input[name=postcode]', 'input[name=country_id]'];
       modal.setFirstName(jQuery('input[name=firstname]').val());
       modal.setLastName(jQuery('input[name=lastname]').val());
       modal.setEmail(getCustomerEmail());
@@ -173,6 +159,55 @@ function getCustomerEmail() {
   }
 }
 
+function setDetailsFromCustomerData() {
+  var addressIndex = jQuery(".shipping-address-items").children(".selected-item").index();
+
+  // Switching between addresses and none selected at this stage
+  if (addressIndex < 0) {
+    return false;
+  }
+
+  var cacheStorage = localStorage.getItem('mage-cache-storage');
+
+  // New address added not yet present in customerData
+  if ((addressIndex + 1) > jQuery(".shipping-address-items").length) {
+
+    if (cacheStorage == null) {
+      return false;
+    }
+    
+    var newAddress = JSON.parse(cacheStorage)['checkout-data'].newCustomerShippingAddress
+
+    modal.setFirstName(newAddress.firstname);
+    modal.setLastName(newAddress.lastname);
+    modal.setEmail(getCustomerEmail());
+    modal.setPhone(newAddress.telephone);
+    modal.setAddress({
+      addressLine1: newAddress.street[0],
+      addressLine2: newAddress.street[1],
+      town: newAddress.city,
+      province: newAddress.region,
+      postcode: newAddress.postcode,
+      country: newAddress.country_id
+    });
+
+  // Get the selected address details from customerData
+  } else {
+    modal.setFirstName(customerData.addresses[addressIndex].firstname);
+    modal.setLastName(customerData.addresses[addressIndex].lastname);
+    modal.setEmail(getCustomerEmail());
+    modal.setPhone(customerData.addresses[addressIndex].telephone);
+    modal.setAddress({
+      addressLine1: customerData.addresses[addressIndex].street[0],
+      addressLine2: customerData.addresses[addressIndex].street[1],
+      town: customerData.addresses[addressIndex].city,
+      province: customerData.addresses[addressIndex].region.region,
+      postcode: customerData.addresses[addressIndex].postcode,
+      country: customerData.addresses[addressIndex].country_id
+    });
+  }
+}
+
 // Get container
 const getContainerElement = () =>
 document.getElementById(
@@ -188,6 +223,10 @@ var obs = new MutationObserver(function(mutations, observer) {
   if (getContainerElement() && typeof modal != 'undefined' && jQuery('#toshi-app').length === 0){
     jQuery('#label_carrier_toshi_toshi').append('<div id="toshi-app"></div>');
     modal.mount(document.getElementById('toshi-app'));
+  }
+
+  if (toshiLaunched && isCustomerLoggedIn && customerData.addresses.length > 0) {
+    setDetailsFromCustomerData();
   }
 });
 
