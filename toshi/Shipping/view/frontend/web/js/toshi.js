@@ -161,6 +161,12 @@ function getCustomerEmail() {
 
 function setDetailsFromCustomerData() {
   var addressIndex = jQuery(".shipping-address-items").children(".selected-item").index();
+
+  // Switching between addresses and none selected at this stage
+  if (addressIndex < 0) {
+    return false;
+  }
+
   var cacheStorage = localStorage.getItem('mage-cache-storage');
 
   // New address added not yet present in customerData
