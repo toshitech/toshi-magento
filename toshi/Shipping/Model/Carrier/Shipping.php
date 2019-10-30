@@ -108,7 +108,11 @@ class Shipping extends AbstractCarrier implements CarrierInterface
       curl_setopt($request, CURLOPT_POSTFIELDS, $json);
       curl_setopt($request, CURLOPT_HTTPHEADER, array("X-Toshi-Server-Api-Key: {$toshiApiKey}", "Content-Type: application/json"));
 
-      $response =  json_decode(curl_exec($request));
+      $response = json_decode(curl_exec($request));
+
+      if ($response === NULL) {
+        return false;
+      }
 
       if (array_key_exists("eligible", $response)) {
           return $response->eligible;

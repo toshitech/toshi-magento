@@ -37,12 +37,16 @@ class CustomConfigProvider implements ConfigProviderInterface
             // Get the configurable product
             $product = $objectManager->get('\Magento\Catalog\Model\Product')->load($item->getProductId());
 
+            // Get the availability type and date for basket item (TW)
+            $originalAvailabilityType = $product->getData('availability_type');
+            $originalAvailabilityDate = $product->getData('availability_date');
+
             $orderItemObj = (object) [];
             $orderItemObj->name = $item->getName();
             $orderItemObj->sku = $item->getSku();
             $orderItemObj->qty = $item->getQty();
             $orderItemObj->description = $product->getDescription();
-            $orderItemObj->additionalSizes = $this->getSizes($item->getProductId(), $item->getSku());
+            $orderItemObj->additionalSizes = $this->getSizes($item->getProductId(), $item->getSku(), $originalAvailabilityType, $originalAvailabilityDate);
             $orderObj->products[] = $orderItemObj;
         }
 
@@ -62,7 +66,7 @@ class CustomConfigProvider implements ConfigProviderInterface
                     $size = (object) [];
                     $size->variantSku = $subproduct->getSku();
                     $size->size = $subproduct->getAttributeText('size');
-                    $size->isAvailable = true;
+                    $size->isAvailable = $this->isAvailable($subproduct, $originalAvailabilityType, $originalAvailabilityDate);
                     $sizes[] = $size;
                 }
             }
@@ -70,4 +74,20 @@ class CustomConfigProvider implements ConfigProviderInterface
         return $sizes;
     }
 
+    // Check if size options are available depending on original item availability type and availability date
+    function isAvailable($subproduct, $originalAvailabilityType, $originalAvailabilityDate){
+      if (!isset($originalAvailabilityType) || $subproduct->getData('availability_type') == 'immediate'){
+        return true;
+      }
+
+      if ($originalAvailabilityType == 'immediate'){
+        return false;
+      }
+
+      if (isset($originalAvailabilityDate) && $subproduct->getData('availability_date') == $originalAvailabilityDate){
+        return true;
+      } 
+
+      return false;
+    }
 }
