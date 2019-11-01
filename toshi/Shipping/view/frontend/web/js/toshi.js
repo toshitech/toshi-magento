@@ -170,7 +170,7 @@ function setDetailsFromCustomerData() {
   var cacheStorage = localStorage.getItem('mage-cache-storage');
 
   // New address added not yet present in customerData
-  if ((addressIndex + 1) > jQuery(".shipping-address-items").length) {
+  if ((addressIndex + 1) > jQuery(".shipping-address-item").length) {
 
     if (cacheStorage == null) {
       return false;
