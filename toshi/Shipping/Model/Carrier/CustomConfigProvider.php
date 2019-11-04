@@ -38,8 +38,8 @@ class CustomConfigProvider implements ConfigProviderInterface
             $product = $objectManager->get('\Magento\Catalog\Model\Product')->load($item->getProductId());
 
             // Get the availability type and date for basket item (TW)
-            $originalAvailabilityType = $product->getData('availability_type');
-            $originalAvailabilityDate = $product->getData('availability_date');
+            $originalAvailabilityType = $item->getAvailabailityType();
+            $originalAvailabilityDate = $item->getAvailabilityDate();
 
             $orderItemObj = (object) [];
             $orderItemObj->name = $item->getName();
@@ -76,7 +76,7 @@ class CustomConfigProvider implements ConfigProviderInterface
 
     // Check if size options are available depending on original item availability type and availability date
     function isAvailable($subproduct, $originalAvailabilityType, $originalAvailabilityDate){
-      if (!isset($originalAvailabilityType) || $subproduct->getData('availability_type') == 'immediate'){
+      if (!isset($originalAvailabilityType) || $subproduct->getAvailabilityType() == 'immediate'){
         return true;
       }
 
@@ -84,7 +84,7 @@ class CustomConfigProvider implements ConfigProviderInterface
         return false;
       }
 
-      if (isset($originalAvailabilityDate) && $subproduct->getData('availability_date') == $originalAvailabilityDate){
+      if (isset($originalAvailabilityDate) && $subproduct->getAvailabilityDate() == $originalAvailabilityDate){
         return true;
       } 
 
