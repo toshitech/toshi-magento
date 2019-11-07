@@ -132,7 +132,7 @@ function launchToshi() {
                                 item.base_price_incl_tax,
                                 item.availability_type,
                                 item.availability_date,
-                                getAttribute(item, "Size"),
+                                getAttribute(item, "Product Size"),
                                 getAttribute(item, "Color"),
                                 availableSizes));
   });

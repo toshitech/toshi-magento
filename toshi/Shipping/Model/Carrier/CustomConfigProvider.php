@@ -7,13 +7,25 @@ use \Magento\Framework\App\Config\ScopeConfigInterface as ScopeConfig;
 class CustomConfigProvider implements ConfigProviderInterface
 {
     protected $checkoutSession;
+    private $_logger;
 
-    public function __construct(ScopeConfig $scopeConfig) {
+    public function __construct(
+        \Psr\Log\LoggerInterface $logger,
+        ScopeConfig $scopeConfig
+    ) {
+        $this->_logger = $logger;
         $this->scopeConfig = $scopeConfig;
     }
 
+    public function log($message) {
+        if( is_object( $message ) || is_array( $message ) ) {
+            $message = print_r( $message, true );
+        }
+        $this->_logger->debug( $message );
+    }
+
     public function getConfig()
-    {        
+    {
         $toshi_data = [];
 
         // Get the Toshi key
@@ -38,8 +50,10 @@ class CustomConfigProvider implements ConfigProviderInterface
             $product = $objectManager->get('\Magento\Catalog\Model\Product')->load($item->getProductId());
 
             // Get the availability type and date for basket item (TW)
-            $originalAvailabilityType = $product->getData('availability_type');
-            $originalAvailabilityDate = $product->getData('availability_date');
+//             $originalAvailabilityType = $product->getData('availability_type');
+//             $originalAvailabilityDate = $product->getData('availability_date');
+            $originalAvailabilityType = $item->getAvailabilityType();
+            $originalAvailabilityDate = $item->getAvailabilityDate();
 
             $orderItemObj = (object) [];
             $orderItemObj->name = $item->getName();
@@ -55,7 +69,7 @@ class CustomConfigProvider implements ConfigProviderInterface
         return $toshi_data;
     }
 
-    function getSizes($id, $selectedSku){
+    function getSizes($id, $selectedSku, $originalAvailabilityType, $originalAvailabilityDate){
         $sizes = array();
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $prod = $objectManager->create('Magento\Catalog\Model\Product')->load($id);

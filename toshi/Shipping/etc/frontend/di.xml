@@ -8,4 +8,9 @@
             </argument>
         </arguments>
     </type>
+    <type name="Toshi\Shipping\Model\Carrier\CustomConfigProvider">
+        <arguments>
+            <argument name="logger" xsi:type="object">Beocode\General\Logger\Standard</argument>
+        </arguments>
+    </type>
 </config>
